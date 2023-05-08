@@ -57,11 +57,13 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     
     func frameAnimationValue(_ value: Double, height: CGFloat) -> CGFloat {
         let value = abs(BarLayout.barHeight(height, Double(value), chartData.maxValue))
-        if chartData.disableAnimation {
-            return value
-        } else {
-            return startAnimation ? value : 0
-        }
+//        if chartData.disableAnimation {
+//            return value
+//        } else {
+//            return startAnimation ? value : 0
+//        }
+        
+        return value
     }
     
     func offsetAnimationValue(_ value: Double, size: CGSize) -> CGSize {

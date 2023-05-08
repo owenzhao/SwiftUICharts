@@ -42,14 +42,6 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
                 .fill(colour)
                 .frame(width: BarLayout.barWidth(geo.size.width, chartData.barStyle.barWidth))
                 .frame(height: frameAnimationValue(dataPoint.value, height: geo.size.height))
-                .offset(offsetAnimationValue(dataPoint.value, size: geo.size))
-                .animation(.default, value: chartData.dataSets)
-                .animateOnAppear(disabled: chartData.disableAnimation, using: chartData.chartStyle.globalAnimation) {
-                    self.startAnimation = true
-                }
-                .animateOnDisappear(disabled: chartData.disableAnimation, using: chartData.chartStyle.globalAnimation) {
-                    self.startAnimation = false
-                }
                 .accessibilityValue(dataPoint.getCellAccessibilityValue(specifier: chartData.infoView.touchSpecifier,
                                                                         formatter: chartData.infoView.touchFormatter))
         }
@@ -57,23 +49,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     
     func frameAnimationValue(_ value: Double, height: CGFloat) -> CGFloat {
         let value = abs(BarLayout.barHeight(height, Double(value), chartData.maxValue))
-        if chartData.disableAnimation {
-            return value
-        } else {
-            return startAnimation ? value : 0
-        }
-    }
-    
-    func offsetAnimationValue(_ value: Double, size: CGSize) -> CGSize {
-        let height = frameAnimationValue(dataPoint.value, height: size.height)
-
-        if height > 0 {
-            let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
-            return startValue
-        }
-
-        let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
-        return endValue
+        return value
     }
 }
 

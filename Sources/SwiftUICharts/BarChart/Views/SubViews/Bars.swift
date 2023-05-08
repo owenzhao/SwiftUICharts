@@ -70,10 +70,19 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     func offsetAnimationValue(_ value: Double, size: CGSize) -> CGSize {
         let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
         let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
+        
+        if startValue.height < endValue.height {
+            if chartData.disableAnimation {
+                return startValue
+            } else {
+                return startAnimation ? startValue : endValue
+            }
+        }
+        
         if chartData.disableAnimation {
-            return startValue
+            return endValue
         } else {
-            return startAnimation ? startValue : endValue
+            return startAnimation ? endValue : startValue
         }
     }
 }

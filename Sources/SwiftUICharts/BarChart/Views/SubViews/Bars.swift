@@ -85,6 +85,12 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
 //            return startAnimation ? startValue : endValue
 //        }
         
+        if height > 0 {
+            let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
+            return startValue
+        }
+
+        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.minValue)
         return startValue
     }
 }

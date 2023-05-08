@@ -43,8 +43,6 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
                 .frame(width: BarLayout.barWidth(geo.size.width, chartData.barStyle.barWidth))
                 .frame(height: frameAnimationValue(dataPoint.value, height: geo.size.height))
                 .offset(offsetAnimationValue(dataPoint.value, size: geo.size))
-//                .background(Color(.gray).opacity(0.000000001))
-                .background(Color.blue)
                 .animation(.default, value: chartData.dataSets)
                 .animateOnAppear(disabled: chartData.disableAnimation, using: chartData.chartStyle.globalAnimation) {
                     self.startAnimation = true
@@ -58,7 +56,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     }
     
     func frameAnimationValue(_ value: Double, height: CGFloat) -> CGFloat {
-        let value = BarLayout.barHeight(height, Double(value), chartData.maxValue)
+        let value = abs(BarLayout.barHeight(height, Double(value), chartData.maxValue))
         if chartData.disableAnimation {
             return value
         } else {
@@ -67,7 +65,19 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     }
     
     func offsetAnimationValue(_ value: Double, size: CGSize) -> CGSize {
-        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
+        let height = frameAnimationValue(dataPoint.value, height: size.height)
+        
+        if height > 0 {
+            let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
+            let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
+            if chartData.disableAnimation {
+                return startValue
+            } else {
+                return startAnimation ? startValue : endValue
+            }
+        }
+        
+        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), abs(chartData.minValue))
         let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
         if chartData.disableAnimation {
             return startValue

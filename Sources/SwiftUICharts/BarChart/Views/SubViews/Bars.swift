@@ -77,7 +77,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
             }
         }
         
-        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), abs(chartData.minValue))
+        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.minValue)
         let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
         if chartData.disableAnimation {
             return startValue

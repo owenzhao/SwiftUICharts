@@ -43,7 +43,8 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
                 .frame(width: BarLayout.barWidth(geo.size.width, chartData.barStyle.barWidth))
                 .frame(height: frameAnimationValue(dataPoint.value, height: geo.size.height))
                 .offset(offsetAnimationValue(dataPoint.value, size: geo.size))
-                .background(Color(.gray).opacity(0.000000001))
+//                .background(Color(.gray).opacity(0.000000001))
+                .background(Color.blue)
                 .animation(.default, value: chartData.dataSets)
                 .animateOnAppear(disabled: chartData.disableAnimation, using: chartData.chartStyle.globalAnimation) {
                     self.startAnimation = true

@@ -40,8 +40,8 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
         GeometryReader { geo in
             RoundedRectangleBarShape(chartData.barStyle.cornerRadius)
                 .fill(colour)
-                .scaleEffect(y: startAnimation ? divideByZeroProtection(CGFloat.self, dataPoint.value, chartData.maxValue) : 0, anchor: .bottom)
-                .scaleEffect(x: chartData.barStyle.barWidth, anchor: .center)
+                .frame(width: BarLayout.barWidth(geo.size.width, chartData.barStyle.barWidth))
+                .frame(height: frameAnimationValue(dataPoint.value, height: geo.size.height))
                 .offset(offsetAnimationValue(dataPoint.value, size: geo.size))
                 .background(Color(.gray).opacity(0.000000001))
                 .animation(.default, value: chartData.dataSets)
@@ -57,7 +57,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     }
     
     func frameAnimationValue(_ value: Double, height: CGFloat) -> CGFloat {
-        let value = BarLayout.barHeight(height, Double(value), chartData.maxValue)
+        let value = abs(BarLayout.barHeight(height, Double(value), chartData.maxValue))
         if chartData.disableAnimation {
             return value
         } else {

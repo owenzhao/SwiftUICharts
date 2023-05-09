@@ -56,7 +56,18 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     }
     
     func frameAnimationValue(_ value: Double, height: CGFloat) -> CGFloat {
-        let value = abs(BarLayout.barHeight(height, Double(value), chartData.maxValue))
+        let direction = Double(value) > 0
+        
+        if direction {
+            let value = BarLayout.barHeight(height, Double(value), chartData.maxValue)
+            if chartData.disableAnimation {
+                return value
+            } else {
+                return startAnimation ? value : 0
+            }
+        }
+        
+        let value = BarLayout.barHeight(height, Double(value), abs(chartData.minValue))
         if chartData.disableAnimation {
             return value
         } else {
@@ -65,16 +76,25 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
     }
     
     func offsetAnimationValue(_ value: Double, size: CGSize) -> CGSize {
-        let height = frameAnimationValue(dataPoint.value, height: size.height)
-
-        if height > 0 {
-            let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
-            return startValue
-        }
+        let direction = Double(value) > 0
         
-        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue - chartData.minValue)
-        return startValue
-    }
+        if direction {
+            let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, Double(value), chartData.maxValue)
+            let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
+            if chartData.disableAnimation {
+                return startValue
+            } else {
+                return startAnimation ? startValue : endValue
+            }
+        }
+
+        let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, abs(Double(value)), chartData.maxValue - chartData.minValue)
+        let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
+        if chartData.disableAnimation {
+            return startValue
+        } else {
+            return startAnimation ? startValue : endValue
+        }
 }
 
 // MARK: Gradient

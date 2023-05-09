@@ -87,7 +87,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
                 return startAnimation ? startValue : endValue
             }
         }
-
+        
         let startValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, abs(Double(value)), chartData.maxValue - chartData.minValue)
         let endValue = BarLayout.barOffset(size, chartData.barStyle.barWidth, 0, 0)
         if chartData.disableAnimation {
@@ -95,6 +95,7 @@ internal struct ColourBar<CD: CTBarChartDataProtocol & GetDataProtocol,
         } else {
             return startAnimation ? startValue : endValue
         }
+    }
 }
 
 // MARK: Gradient
